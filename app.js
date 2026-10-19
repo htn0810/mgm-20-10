@@ -150,8 +150,8 @@
    * Chọn thử thách cho bạn nữ `w`:
    *  - Thử thách có `for` trùng tên bạn ấy → luôn ra cái đó (giữ riêng, người khác không trúng).
    *  - Còn lại: rút ngẫu nhiên trong các thử thách CHƯA ra trước → không bỏ sót cái nào.
-   *  - Ra đủ hết rồi thì chỉ thử thách Thường (common) được ra lại;
-   *    Hiếm / Sử thi… chỉ ra đúng 1 lần.
+   *  - Ra đủ hết rồi thì chỉ thử thách có `repeat: true` (VD trà sữa) được ra lại;
+   *    còn lại mỗi thử thách chỉ ra đúng 1 lần.
    */
   function pickPunishment(w) {
     const name = D.women[w];
@@ -166,8 +166,9 @@
     const pool = open.length ? open : all;
     const fresh = pool.filter(unused);
     if (fresh.length) return fresh[rand(fresh.length)];
-    const commons = pool.filter((i) => D.punishments[i].rarity === "common");
-    return (commons.length ? commons : pool)[rand((commons.length ? commons : pool).length)];
+    const again = pool.filter((i) => D.punishments[i].repeat); // chỉ thử thách `repeat: true` được ra lại
+    const list = again.length ? again : pool;
+    return list[rand(list.length)];
   }
 
   /** Số bạn nam phải chịu phạt cho thử thách `p`. */
@@ -176,10 +177,16 @@
     return pun.victims || (D.victimsByRarity || {})[pun.rarity] || 1;
   }
   /** Chọn `n` bạn nam khác nhau, ưu tiên người chưa bị gọi. */
-  function pickMen(n) {
-    const chosen = [];
-    for (let k = 0; k < n; k++) {
-      let list = available("m").filter((i) => !chosen.includes(i));
+  function pickMen(n, p = null) {
+    // Thử thách có `men: [...]` → các bạn nam đó luôn trúng
+    const fixed = p != null ? (D.punishments[p].men || []).map((name) => D.men.indexOf(name)).filter((i) => i >= 0) : [];
+    // Giữ các bạn nam đã được hẹn cho thử thách chưa ra, để không bị quay trúng chỗ khác trước
+    const held = D.punishments.flatMap((x, j) => (j !== p && !state.used.p.includes(j) ? x.men || [] : []))
+      .map((name) => D.men.indexOf(name));
+    const chosen = fixed.slice(0, n);
+    for (let k = chosen.length; k < n; k++) {
+      let list = available("m").filter((i) => !chosen.includes(i) && !held.includes(i));
+      if (!list.length) list = available("m").filter((i) => !chosen.includes(i));
       if (!list.length) list = D.men.map((_, i) => i).filter((i) => !chosen.includes(i));
       if (!list.length) break;
       chosen.push(list[rand(list.length)]);
@@ -479,7 +486,7 @@
   /* ---------------- Gacha ---------------- */
   function setupGacha() {
     current.p = pickPunishment(current.w);
-    current.ms = pickMen(victimsOf(current.p));
+    current.ms = pickMen(victimsOf(current.p), current.p);
     $("#g-woman").textContent = D.women[current.w];
     $("#btn-spin").disabled = false;
     $("#btn-spin").hidden = false;
@@ -831,7 +838,9 @@
     const rar = RARITY[pun.rarity];
     const names = menOf(r).map((m) => D.men[m]);
     const LD = L(D);
-    const tpl = names.length > 1 && LD.resultTemplateMany ? LD.resultTemplateMany : LD.resultTemplate;
+    let tpl = names.length > 1 && LD.resultTemplateMany ? LD.resultTemplateMany : LD.resultTemplate;
+    // Tên đã có cách xưng hô (VD "chị Thu (Tea lady)") → bỏ chữ "bạn" đứng trước: "cho chị Thu…"
+    if (/^(chị|cô|em|anh)\s/i.test(D.women[w])) tpl = tpl.replace(/bạn\s+\{woman\}/i, "{woman}");
     const menHTML = names.length < 2
       ? `<span class="hl-man">${esc(names[0] || "")}</span>`
       : names.slice(0, -1).map((x) => `<span class="hl-man">${esc(x)}</span>`).join(", ") +
@@ -898,7 +907,7 @@
       k++;
       const rows = group.map((p) => {
         const own = owners[p.i] || [];
-        const repeat = rk === "common"; // Thường: vẫn còn trong kho dù đã có chủ
+        const repeat = !!p.repeat; // `repeat: true`: vẫn còn trong kho dù đã có chủ
         const done = own.length && !repeat;
         const ownersHTML = own.map((o) =>
           `<p class="pv-owner"><b>${esc(joinNames(o.ms.map((m) => D.men[m])))}</b> → ${esc(D.women[o.w])}</p>`).join("");
@@ -1550,6 +1559,9 @@
   [...D.questions, ...D.punishments].forEach((x) => {
     if (x.for && !D.women.includes(x.for)) console.warn(`[data.js] for: "${x.for}" không khớp tên bạn nữ nào trong women`, x);
   });
+  D.punishments.forEach((x) => (x.men || []).forEach((name) => {
+    if (!D.men.includes(name)) console.warn(`[data.js] men: "${name}" không có trong danh sách men`, x);
+  }));
   save(); // lưu thứ tự người chơi vừa tạo (nếu lịch sử cũ chưa có)
   applyStaticI18n();
   spawnPetals();

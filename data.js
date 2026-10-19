@@ -14,6 +14,10 @@
  *                  Thêm `for: "Tên bạn nữ"` để giữ thử thách đó cho riêng bạn ấy:
  *                  gacha vẫn quay nhưng luôn dừng ở thử thách này, và người
  *                  khác sẽ không quay trúng.
+ *                  Thêm `repeat: true` nếu thử thách được phép ra nhiều lần
+ *                  (mặc định mỗi thử thách chỉ ra 1 lần).
+ *                  Thêm `men: ["Tên nam"]` để gacha luôn dừng ở (các) bạn nam đó
+ *                  khi ra thử thách này.
  *  - men:          danh sách 30 bạn nam
  *  - victimsByRarity: số bạn nam phải chịu phạt theo độ hiếm
  *                  (muốn riêng 1 thử thách khác số này thì thêm `victims: 4`
@@ -172,13 +176,13 @@ window.GAME_DATA = {
   ],
 
   punishments: [
-    { text: "mua một ly trà sữa full topping",                                        rarity: "common", en: { text: "buy a bubble tea with all the toppings" } },
+    { text: "mua một ly trà sữa full topping",                                        rarity: "common", repeat: true, en: { text: "buy a bubble tea with all the toppings" } },
     { text: "viết thiệp tay chúc mừng",                                              rarity: "common", en: { text: "write a handmade greeting card" } },
     { text: "tặng 1 món quà nhỏ dễ thương (tự suy nghĩ)",                             rarity: "common", for: "chị Thu (Tea lady)", en: { text: "give a cute little gift (your own idea)" } },
     { text: "tặng một bó hoa thật xinh",                                              rarity: "rare", for: "chị Trang (Tea lady)", en: { text: "give a lovely bouquet of flowers" } },
     { text: "mời một bữa trưa thật xịn",                                              rarity: "rare", en: { text: "buy a fancy lunch" } },
     { text: "quay một video chúc mừng tập thể, đăng lên group F&B",                   rarity: "epic", en: { text: "film a group greeting video and post it in the F&B group" } },
-    { text: "tặng 1 cái bánh giò",                                                   rarity: "common", en: { text: "give a bánh giò (Vietnamese pyramid rice dumpling)" } }
+    { text: "tặng 1 cái bánh giò",                                                   rarity: "common", men: ["Trình"], en: { text: "give a bánh giò (Vietnamese pyramid rice dumpling)" } }
   ],
 
   men: [
@@ -208,26 +212,26 @@ window.GAME_DATA = {
   rescue: {
     pushups: 5,
     questions: [
-      // {
-      //   q: "Trong một gia đình, mỗi người con trai có số chị em gái bằng số anh em trai. Còn mỗi người con gái thì có số anh em trai gấp đôi số chị em gái. Hỏi nhà đó có mấy con trai, mấy con gái?",
-      //   answer: "4 con trai và 3 con gái",
-      //   note: "Nhìn từ một bạn trai: bạn ấy thấy 3 anh em trai khác (trừ mình ra) và 3 chị em gái. Bằng nhau, đúng.\nNhìn từ một bạn gái: bạn ấy thấy 4 anh em trai và 2 chị em gái khác (trừ mình ra). 4 gấp đôi 2, đúng.\nMẹo khó của câu này là phải nhớ trừ chính mình ra khi đếm, anh em hay quên chỗ này nên tính mãi không ra.",
-      //   en: {
-      //     q: "In a family, each son has as many sisters as brothers. Each daughter has twice as many brothers as sisters. How many sons and daughters are there?",
-      //     answer: "4 sons and 3 daughters",
-      //     note: "From a son's view: he sees 3 other brothers (not counting himself) and 3 sisters. Equal, correct.\nFrom a daughter's view: she sees 4 brothers and 2 other sisters (not counting herself). 4 is twice 2, correct.\nThe trick is remembering to leave yourself out when counting. That's exactly where the guys get stuck."
-      //   }
-      // }
       {
-        q: "Một người đàn ông sống ở tầng 10 của chung cư. Sáng nào ông cũng đi thang máy xuống tầng 1 để đi làm. Chiều về, ông đi thang máy lên tầng 7 rồi leo bộ lên tầng 10. Nhưng những hôm trời mưa thì ông lại đi thang máy thẳng lên tầng 10. Tại sao?",
-        answer: "Ông ấy thấp, chỉ với tới nút tầng 7 trong thang máy",
-        note: "Những hôm trời mưa, ông mang theo cây dù nên dùng dù để bấm được nút tầng 10.\nAnh em hay đoán kiểu tập thể dục, thang máy hỏng, né hàng xóm... mà quên mất chi tiết quan trọng nhất là cây dù.\nGợi ý nếu bí quá: trời mưa thì ông mang theo cái gì?",
+        q: "Trong một gia đình, mỗi người con trai có số chị em gái bằng số anh em trai. Còn mỗi người con gái thì có số anh em trai gấp đôi số chị em gái. Hỏi nhà đó có mấy con trai, mấy con gái?",
+        answer: "4 con trai và 3 con gái",
+        note: "Nhìn từ một bạn trai: bạn ấy thấy 3 anh em trai khác (trừ mình ra) và 3 chị em gái. Bằng nhau, đúng.\nNhìn từ một bạn gái: bạn ấy thấy 4 anh em trai và 2 chị em gái khác (trừ mình ra). 4 gấp đôi 2, đúng.\nMẹo khó của câu này là phải nhớ trừ chính mình ra khi đếm, anh em hay quên chỗ này nên tính mãi không ra.",
         en: {
-          q: "A man lives on the 10th floor of an apartment building. Every morning he takes the elevator down to the 1st floor to go to work. In the evening, he takes the elevator up to the 7th floor and then walks up the stairs to the 10th. But on rainy days, he takes the elevator straight to the 10th floor. Why?",
-          answer: "He is short and can only reach the 7th floor button",
-          note: "On rainy days he carries an umbrella, so he uses it to press the 10th floor button.\nThe guys usually guess exercise, a broken elevator, or avoiding neighbors, and miss the key detail: the umbrella.\nHint if they get stuck: what does he carry on rainy days?"
+          q: "In a family, each son has as many sisters as brothers. Each daughter has twice as many brothers as sisters. How many sons and daughters are there?",
+          answer: "4 sons and 3 daughters",
+          note: "From a son's view: he sees 3 other brothers (not counting himself) and 3 sisters. Equal, correct.\nFrom a daughter's view: she sees 4 brothers and 2 other sisters (not counting herself). 4 is twice 2, correct.\nThe trick is remembering to leave yourself out when counting. That's exactly where the guys get stuck."
         }
       }
+      // {
+      //   q: "Một người đàn ông sống ở tầng 10 của chung cư. Sáng nào ông cũng đi thang máy xuống tầng 1 để đi làm. Chiều về, ông đi thang máy lên tầng 7 rồi leo bộ lên tầng 10. Nhưng những hôm trời mưa thì ông lại đi thang máy thẳng lên tầng 10. Tại sao?",
+      //   answer: "Ông ấy thấp, chỉ với tới nút tầng 7 trong thang máy",
+      //   note: "Những hôm trời mưa, ông mang theo cây dù nên dùng dù để bấm được nút tầng 10.\nAnh em hay đoán kiểu tập thể dục, thang máy hỏng, né hàng xóm... mà quên mất chi tiết quan trọng nhất là cây dù.\nGợi ý nếu bí quá: trời mưa thì ông mang theo cái gì?",
+      //   en: {
+      //     q: "A man lives on the 10th floor of an apartment building. Every morning he takes the elevator down to the 1st floor to go to work. In the evening, he takes the elevator up to the 7th floor and then walks up the stairs to the 10th. But on rainy days, he takes the elevator straight to the 10th floor. Why?",
+      //     answer: "He is short and can only reach the 7th floor button",
+      //     note: "On rainy days he carries an umbrella, so he uses it to press the 10th floor button.\nThe guys usually guess exercise, a broken elevator, or avoiding neighbors, and miss the key detail: the umbrella.\nHint if they get stuck: what does he carry on rainy days?"
+      //   }
+      // }
     ]
   },
 
