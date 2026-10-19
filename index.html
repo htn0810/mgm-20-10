@@ -6,15 +6,19 @@
   <title>Gacha 20/10</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Dancing+Script:wght@600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <!-- Hoa rơi nền (dùng chung cho cả 2 màn hình) -->
   <div class="petals" id="petals" aria-hidden="true"></div>
+  <div class="shutter" id="shutter" aria-hidden="true"></div>
 
   <!-- ===================== MÀN HÌNH GIỚI THIỆU ===================== -->
   <section class="screen active" id="intro">
+    <div class="lang-switch lang-float" role="group" aria-label="Ngôn ngữ" data-i18n-aria="lang.label">
+      <button data-lang="vi">VI</button><button data-lang="en">EN</button>
+    </div>
     <div class="intro-card">
       <div class="bloom" aria-hidden="true">
         <span></span><span></span><span></span><span></span>
@@ -22,28 +26,24 @@
         <i class="bloom-core"></i>
       </div>
 
-      <p class="intro-eyebrow">Ngày Phụ nữ Việt Nam</p>
-      <h1 class="intro-date" aria-label="20 tháng 10">
+      <p class="intro-eyebrow" data-i18n="intro.eyebrow">Ngày Phụ nữ Việt Nam</p>
+      <h1 class="intro-date" aria-label="20 tháng 10" data-i18n-aria="intro.dateAria">
         <span>2</span><span>0</span><span class="slash">/</span><span>1</span><span>0</span>
       </h1>
-      <p class="intro-script">Gửi những bông hoa đẹp nhất</p>
-      <p class="intro-text">
+      <p class="intro-script" data-i18n="intro.script">Gửi những bông hoa đẹp nhất</p>
+      <p class="intro-text" data-i18n-html="intro.text">
         Hôm nay các chị em là nhân vật chính! Trả lời đúng câu hỏi để giành quyền
         <b>quay gacha</b> — vòng quay sẽ chọn thử thách và “người được chọn” trong
         các bạn nam để phục vụ bạn. 💐
       </p>
 
       <ol class="intro-steps">
-        <li><span>1</span>Chọn tên bạn nữ</li>
-        <li><span>2</span>Trả lời câu hỏi</li>
-        <li><span>3</span>Đúng thì quay gacha</li>
+        <li><span>1</span><em data-i18n="intro.step1">Chọn tên bạn nữ</em></li>
+        <li><span>2</span><em data-i18n="intro.step2">Trả lời câu hỏi</em></li>
+        <li><span>3</span><em data-i18n="intro.step3">Đúng thì quay gacha</em></li>
       </ol>
 
-      <button class="btn btn-primary btn-lg" id="btn-start">Tiếp tục <span aria-hidden="true">→</span></button>
-    </div>
-
-    <div class="floaters" aria-hidden="true">
-      <span>💐</span><span>🌷</span><span>💝</span><span>🌸</span><span>🎀</span><span>🌹</span>
+      <button class="btn btn-primary btn-lg" id="btn-start" data-i18n-html="intro.start">Tiếp tục <span aria-hidden="true">→</span></button>
     </div>
   </section>
 
@@ -59,29 +59,41 @@
       </div>
       <div class="stats" id="stats"></div>
       <div class="topbar-actions">
-        <button class="icon-btn" id="btn-home" title="Về trang chủ" aria-label="Về trang chủ">🏠</button>
-        <button class="btn btn-ghost btn-sm" id="btn-preview">🎁 Kho thử thách</button>
-        <button class="icon-btn" id="btn-sound" title="Bật/tắt âm thanh" aria-label="Bật/tắt âm thanh">🔊</button>
-        <button class="icon-btn" id="btn-reset" title="Chơi lại từ đầu" aria-label="Chơi lại từ đầu">↺</button>
+        <div class="lang-switch" role="group" aria-label="Ngôn ngữ" data-i18n-aria="lang.label">
+          <button data-lang="vi">VI</button><button data-lang="en">EN</button>
+        </div>
+        <button class="icon-btn" id="btn-home" title="Về trang chủ" aria-label="Về trang chủ" data-i18n-title="top.home" data-i18n-aria="top.home">🏠</button>
+        <button class="btn btn-ghost btn-sm" id="btn-preview" data-i18n="top.preview">🎁 Kho thử thách</button>
+        <button class="icon-btn" id="btn-sound" title="Bật/tắt âm thanh" aria-label="Bật/tắt âm thanh" data-i18n-title="top.sound" data-i18n-aria="top.sound">🔊</button>
+        <button class="icon-btn" id="btn-reset" title="Chơi lại từ đầu" aria-label="Chơi lại từ đầu" data-i18n-title="top.reset" data-i18n-aria="top.reset">↺</button>
       </div>
     </header>
 
     <main class="game-main">
       <div class="women-wrap">
-        <h2 class="section-title">Chọn một bông hoa <span aria-hidden="true">🌷</span></h2>
-        <p class="section-sub">Bấm vào tên bạn nữ để nhận câu hỏi ngẫu nhiên</p>
+        <h2 class="section-title" data-i18n-html="women.title">Chọn một bông hoa <span aria-hidden="true">🌷</span></h2>
+        <p class="section-sub" data-i18n="women.sub">Bấm vào tên bạn nữ để nhận câu hỏi ngẫu nhiên</p>
+        <div class="rescue-cta" id="rescue-cta" hidden>
+          <span class="rescue-siren" aria-hidden="true">🚨</span>
+          <div>
+            <strong id="rescue-cta-title"></strong>
+            <small id="rescue-cta-sub"></small>
+          </div>
+          <button class="btn btn-danger" id="btn-rescue"></button>
+        </div>
         <div class="women-grid" id="women-grid"></div>
       </div>
 
       <aside class="board">
         <div class="board-head">
+          <button class="board-camera" id="btn-photo" title="Chụp ảnh Bảng vàng" aria-label="Chụp ảnh Bảng vàng" data-i18n-title="board.photo" data-i18n-aria="board.photo" hidden>📸</button>
           <span class="board-trophy" aria-hidden="true">🏆</span>
-          <h2>Bảng Vàng Ân Tình</h2>
-          <p>Vinh danh các anh đã “tình nguyện” phục vụ chị em</p>
+          <h2 data-i18n="board.title">Bảng Vàng</h2>
+          <p data-i18n="board.sub">Vinh danh các anh đã “tình nguyện” phục vụ chị em</p>
         </div>
         <div class="damage" id="damage">
           <div class="damage-top">
-            <span>💸 Mức thiệt hại của các anh</span>
+            <span data-i18n="board.damage">💸 Mức thiệt hại của các anh</span>
             <b id="dmg-pct">0%</b>
           </div>
           <div class="damage-bar"><i id="dmg-fill"></i></div>
@@ -96,48 +108,55 @@
   <div class="modal" id="modal" aria-hidden="true">
     <div class="modal-backdrop" data-close></div>
     <div class="modal-box" role="dialog" aria-modal="true">
-      <button class="modal-close" id="modal-close" data-close aria-label="Đóng">×</button>
+      <button class="modal-close" id="modal-close" data-close aria-label="Đóng" data-i18n-aria="modal.close">×</button>
 
       <!-- Bước 1: câu hỏi -->
       <div class="panel" id="panel-question">
-        <p class="eyebrow">Câu hỏi dành cho</p>
+        <p class="eyebrow" data-i18n="q.for">Câu hỏi dành cho</p>
         <h3 class="panel-name" id="q-woman"></h3>
         <div class="q-card">
           <span class="q-badge" id="q-number"></span>
           <p class="q-text" id="q-text"></p>
+          <pre class="q-code" id="q-code" hidden><code></code></pre>
         </div>
 
+        <div class="q-options" id="q-options"></div>
+
         <div class="answer" id="answer">
-          <p class="eyebrow">Đáp án</p>
+          <p class="eyebrow" id="a-label">Đáp án</p>
           <p class="answer-text" id="a-text"></p>
         </div>
 
+        <div class="actions" id="act-go" hidden>
+          <button class="btn btn-primary btn-lg" id="btn-go" data-i18n="q.go">Chính xác! Quay gacha 🎰</button>
+        </div>
+
         <div class="actions" id="act-reveal">
-          <button class="btn btn-primary" id="btn-reveal">Xem đáp án 👀</button>
+          <button class="btn btn-primary" id="btn-reveal" data-i18n="q.reveal">Xem đáp án 👀</button>
         </div>
         <div class="actions" id="act-judge" hidden>
-          <button class="btn btn-ghost" id="btn-wrong">Sai rồi 😢</button>
-          <button class="btn btn-primary" id="btn-right">Trả lời đúng 🎉</button>
+          <button class="btn btn-ghost" id="btn-wrong" data-i18n="q.wrong">Sai rồi 😢</button>
+          <button class="btn btn-primary" id="btn-right" data-i18n="q.right">Trả lời đúng 🎉</button>
         </div>
         <div class="wrong-box" id="wrong-box" hidden>
-          <p>Tiếc quá! Nhưng hôm nay là ngày của chị em mà… 😉</p>
+          <p data-i18n="q.wrongBox">Tiếc quá! Nhưng hôm nay là ngày của chị em mà… 😉</p>
           <div class="actions">
-            <button class="btn btn-ghost" id="btn-end">Kết thúc lượt</button>
-            <button class="btn btn-primary" id="btn-mercy">Vẫn cho quay 💖</button>
+            <button class="btn btn-ghost" id="btn-end" data-i18n="q.end">Kết thúc lượt</button>
+            <button class="btn btn-primary" id="btn-mercy" data-i18n="q.mercy">Vẫn cho quay 💖</button>
           </div>
         </div>
       </div>
 
       <!-- Bước 2: gacha -->
       <div class="panel" id="panel-gacha" hidden>
-        <p class="eyebrow">Phần thưởng của</p>
+        <p class="eyebrow" data-i18n="g.for">Phần thưởng của</p>
         <h3 class="panel-name" id="g-woman"></h3>
 
         <div class="machines">
           <div class="machine" id="machine-p">
             <div class="machine-head">
               <span class="machine-step">1</span>
-              <span>Thử thách cho nam</span>
+              <span data-i18n="g.machineP">Thử thách cho nam</span>
             </div>
             <div class="reel-window">
               <div class="reel-strip" id="reel-p"></div>
@@ -149,41 +168,116 @@
           <div class="machine" id="machine-m">
             <div class="machine-head">
               <span class="machine-step">2</span>
-              <span>Người được chọn</span>
+              <span data-i18n="g.machineM">Người được chọn</span>
+              <span class="machine-count" id="m-count"></span>
             </div>
             <div class="reel-window">
               <div class="reel-strip" id="reel-m"></div>
               <div class="reel-marker"></div>
             </div>
+            <div class="victims" id="victims"></div>
             <div class="machine-foot" id="foot-m">Đang chờ…</div>
           </div>
         </div>
 
         <div class="actions">
-          <button class="btn btn-primary btn-lg btn-spin" id="btn-spin">Quay gacha 🎰</button>
+          <button class="btn btn-primary btn-lg btn-spin" id="btn-spin" data-i18n="g.spin">Quay gacha 🎰</button>
         </div>
       </div>
 
       <!-- Bước 3: kết quả -->
       <div class="panel" id="panel-result" hidden>
         <div class="result-stage">
-          <div class="result-gift" aria-hidden="true">🎁</div>
-          <div class="crier" aria-hidden="true">
-            <div class="cry-face">
-              <i class="cry-eye l"></i><i class="cry-eye r"></i>
-              <i class="cry-stream l"></i><i class="cry-stream r"></i>
-              <i class="tear l" style="--d:0s"></i><i class="tear l" style="--d:.35s"></i><i class="tear l" style="--d:.7s"></i>
-              <i class="tear r" style="--d:.15s"></i><i class="tear r" style="--d:.5s"></i><i class="tear r" style="--d:.85s"></i>
-              <i class="cry-mouth"></i>
-            </div>
-            <p class="crier-name" id="r-crier"></p>
-          </div>
+          <div class="criers" id="r-criers" aria-hidden="true"></div>
         </div>
         <span class="rarity-tag" id="r-rarity"></span>
         <p class="result-sentence" id="r-sentence"></p>
         <p class="result-note" id="r-note"></p>
         <div class="actions">
-          <button class="btn btn-primary" data-close>Tuyệt vời! 💐</button>
+          <button class="btn btn-primary" data-close data-i18n="r.close">Tuyệt vời! 💐</button>
+        </div>
+      </div>
+
+      <!-- VÒNG GIẢI CỨU -->
+      <div class="panel" id="panel-rescue" hidden>
+        <!-- Bước 1: giới thiệu -->
+        <div class="rs-step" id="rs-intro">
+          <p class="rs-test" id="rs-test" data-i18n="rs.test" hidden>Chế độ test · không lưu kết quả</p>
+          <div class="rs-siren" aria-hidden="true">🆘</div>
+          <h3 class="rs-title" data-i18n="rs.title">VÒNG GIẢI CỨU</h3>
+          <p class="rs-lead" data-i18n-html="rs.lead">
+            Các anh dưới đây chưa bị gọi tên lần nào. Cơ hội cuối:
+            trả lời <b>đúng 1 câu trắc nghiệm</b> thì cả đội được giải cứu.
+            Sai thì <b>cả đội hít đất</b> 💪
+          </p>
+          <div class="rs-team" id="rs-team"></div>
+          <div class="actions">
+            <button class="btn btn-danger btn-lg" id="rs-start" data-i18n="rs.start">Vào câu hỏi 🎯</button>
+          </div>
+        </div>
+
+        <!-- Bước 2: câu hỏi -->
+        <div class="rs-step" id="rs-quiz" hidden>
+          <p class="eyebrow" data-i18n="rs.eyebrow">Câu hỏi giải cứu</p>
+          <p class="rs-question" id="rs-question"></p>
+          <div class="rs-options" id="rs-options"></div>
+          <div class="rs-stamp" id="rs-stamp" data-i18n="rs.stamp">SAI!</div>
+          <div class="rs-reveal" id="rs-reveal" hidden>
+            <p class="eyebrow" data-i18n="q.answer">Đáp án</p>
+            <p class="rs-answer" id="rs-answer"></p>
+            <p class="rs-explain" id="rs-explain"></p>
+          </div>
+          <p class="rs-note" id="rs-note"></p>
+          <div class="actions" id="rs-think" hidden>
+            <button class="btn btn-ghost btn-lg" id="rs-show" data-i18n="rs.show">Xem đáp án 👀</button>
+          </div>
+          <div class="actions" id="rs-judge" hidden>
+            <button class="btn btn-danger btn-lg" id="rs-failed" data-i18n="rs.failed">Trả lời sai 💪</button>
+            <button class="btn btn-primary btn-lg" id="rs-passed" data-i18n="rs.passed">Trả lời đúng 🎉</button>
+          </div>
+          <div class="actions" id="rs-after" hidden>
+            <button class="btn btn-danger btn-lg" id="rs-accept" data-i18n="rs.accept">Chấp nhận số phận 💪</button>
+          </div>
+        </div>
+
+        <!-- Bước 3b: giải cứu thành công -->
+        <div class="rs-step" id="rs-saved" hidden>
+          <div class="saved-stage" aria-hidden="true">
+            <div class="saved-rays"></div>
+            <i class="saved-ring"></i><i class="saved-ring r2"></i>
+            <div class="saved-badge">
+              <svg viewBox="0 0 52 52"><path d="M14 27 l8 8 l16 -18"/></svg>
+            </div>
+          </div>
+          <h3 class="rs-title small rs-ok saved-title" data-i18n="rs.savedTitle">Giải cứu thành công!</h3>
+          <p class="rs-lead saved-lead" data-i18n="rs.savedLead">Cả đội thoát hít đất. Công nhận các anh giỏi thật 👏</p>
+          <div class="rs-team saved-team" id="rs-saved-team"></div>
+          <div class="actions">
+            <button class="btn btn-primary btn-lg rs-ok-btn" data-close data-i18n="r.close">Tuyệt vời! 💐</button>
+          </div>
+        </div>
+
+        <!-- Bước 3: hít đất -->
+        <div class="rs-step" id="rs-fail" hidden>
+          <h3 class="rs-title small" data-i18n="rs.failTitle">Giải cứu thất bại!</h3>
+          <p class="rs-lead" id="rs-fail-lead"></p>
+          <img class="rs-meme" id="rs-meme" alt="" hidden>
+          <div class="pushup-stage" id="pushup-stage"></div>
+          <div class="actions">
+            <button class="btn btn-primary btn-lg" data-close data-i18n="rs.finish">Hít xong rồi 💪</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ảnh Bảng vàng (landscape) -->
+      <div class="panel" id="panel-photo" hidden>
+        <p class="eyebrow" data-i18n="ph.eyebrow">Ảnh kỷ niệm</p>
+        <h3 class="panel-title" data-i18n="ph.title">Bảng Vàng 📸</h3>
+        <p class="preview-sub" id="ph-status">Đang tạo ảnh…</p>
+        <div class="photo-frame"><img id="ph-img" alt="Ảnh Bảng vàng" data-i18n-alt="ph.alt"></div>
+        <div class="actions">
+          <button class="btn btn-ghost" id="ph-copy" data-i18n="ph.copy">📋 Copy ảnh</button>
+          <a class="btn btn-primary" id="ph-download" download="bang-vang-20-10.png" data-i18n="ph.download">⬇️ Tải ảnh PNG</a>
         </div>
       </div>
 
@@ -197,15 +291,31 @@
 
       <!-- Xem trước kho thử thách -->
       <div class="panel" id="panel-preview" hidden>
-        <p class="eyebrow">Các anh chuẩn bị tinh thần</p>
-        <h3 class="panel-title">Kho thử thách 20/10 <span aria-hidden="true">🎁</span></h3>
+        <p class="eyebrow" data-i18n="pv.eyebrow">Các anh chuẩn bị tinh thần</p>
+        <h3 class="panel-title" data-i18n-html="pv.title">Kho thử thách 20/10 <span aria-hidden="true">🎁</span></h3>
         <p class="preview-sub" id="pv-sub"></p>
         <div class="preview-grid" id="pv-grid"></div>
+      </div>
+    </div>
+
+    <!-- Hiệu ứng BONUS GACHA -->
+    <div class="bonus" id="bonus" aria-hidden="true">
+      <div class="bonus-rays"></div>
+      <div class="bonus-fx" id="bonus-fx"></div>
+      <div class="bonus-stage">
+        <img class="bonus-meme" id="bonus-meme" alt="" hidden>
+        <div class="bonus-flower">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+          <div class="bonus-core"><b id="bonus-title"></b></div>
+        </div>
+        <span class="bonus-sub" id="bonus-sub"></span>
       </div>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script src="i18n.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
