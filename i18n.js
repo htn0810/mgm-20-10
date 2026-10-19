@@ -7,7 +7,7 @@
  */
 window.I18N = {
   vi: {
-    "doc.title": "Gacha 20/10",
+    "doc.title": "mgm HCM 20/10",
     "lang.label": "Ngôn ngữ",
 
     "intro.eyebrow": "Ngày Phụ nữ Việt Nam",
@@ -158,7 +158,7 @@ window.I18N = {
   },
 
   en: {
-    "doc.title": "Gacha 20/10",
+    "doc.title": "mgm HCM 20/10",
     "lang.label": "Language",
 
     "intro.eyebrow": "Vietnamese Women's Day",

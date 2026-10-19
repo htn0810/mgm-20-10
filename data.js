@@ -11,6 +11,9 @@
  *                  rarity: "common" | "rare" | "epic" | "legendary"
  *                  text nên viết sao cho đọc trơn trong câu:
  *                  "Bạn <nam> sẽ <text> cho bạn nữ <nữ>"
+ *                  Thêm `for: "Tên bạn nữ"` để giữ thử thách đó cho riêng bạn ấy:
+ *                  gacha vẫn quay nhưng luôn dừng ở thử thách này, và người
+ *                  khác sẽ không quay trúng.
  *  - men:          danh sách 30 bạn nam
  *  - victimsByRarity: số bạn nam phải chịu phạt theo độ hiếm
  *                  (muốn riêng 1 thử thách khác số này thì thêm `victims: 4`
@@ -28,7 +31,9 @@
  *                  Thêm (tuỳ chọn):
  *                    code: đoạn code hiện thành khối riêng, tô màu cú pháp
  *                          (xuống dòng bằng \n)
- *                    for:  tên bạn nữ được giữ sẵn câu này (VD "Tea lady");
+ *                    correct: ["A", "B"] (mảng, bỏ `wrong`) → mọi đáp án đều đúng,
+ *                          giữ nguyên thứ tự A/B
+ *                    for:  tên bạn nữ được giữ sẵn câu này (VD "chị Thu (Tea lady)");
  *                          người khác sẽ không bị random trúng câu này
  *                  Trong q / correct / wrong / note, bọc chữ trong `dấu huyền`
  *                  để hiện thành code, VD: "Dùng `let` thay cho `var`".
@@ -45,19 +50,19 @@ window.GAME_DATA = {
 
   women: [
     "Tiên", "Bích Thư", "Linh Thư", "Trang", "Duyên",
-    "Như", "Hằng", "Tea lady", "Tea lady 2"
+    "Như", "Hằng", "chị Thu (Tea lady)", "chị Trang (Tea lady)"
   ],
 
   questions: [
     {
-      for: "Tea lady",
+      for: "chị Thu (Tea lady)",
       q: "Nữ thi sĩ nào được mệnh danh là “Bà chúa thơ Nôm”?",
       correct: "Hồ Xuân Hương",
       wrong: "Đoàn Thị Điểm",
       en: {"q": "Which poet is known as the “Queen of Nôm poetry”?", "correct": "Hồ Xuân Hương", "wrong": "Đoàn Thị Điểm"}
     },
     {
-      for: "Tea lady 2",
+      for: "chị Trang (Tea lady)",
       q: "Ngày Quốc tế Phụ nữ là ngày nào?",
       correct: "Ngày 8/3",
       wrong: "Ngày 1/6",
@@ -136,22 +141,44 @@ window.GAME_DATA = {
       note: "Atomicity – Consistency – Isolation – Durability.",
       en: {"q": "In database ACID, what does the “I” stand for?", "correct": "Isolation", "wrong": "Integrity", "note": "Atomicity – Consistency – Isolation – Durability."}
     },
+
+    // ---------- Câu riêng cho Trang (2 đáp án đều đúng) ----------
     {
-      q: "Chính sách CORS được thực thi (chặn request) ở đâu?",
-      correct: "Trình duyệt",
-      wrong: "Server",
-      note: "Server chỉ trả header cho phép. Gọi API bằng Postman/curl thì không bị CORS chặn.",
-      en: {"q": "Where is the CORS policy enforced (requests blocked)?", "correct": "The browser", "wrong": "The server", "note": "The server only sends the allow headers. Calling an API with Postman/curl is never blocked by CORS."}
+      for: "Trang",
+      q: "Fun Wednesday ngày mai, cả office sẽ ăn gì?",
+      correct: ["Ăn trái cây", "Ăn gì cũng được"],
+      note: "Chọn gì cũng đúng! Cảm ơn Trang – back office của HCM – đã luôn chăm lo cho mọi hoạt động của office 💐",
+      en: {
+        q: "Fun Wednesday is tomorrow. What will the whole office eat?",
+        correct: ["Fruit", "Anything is fine"],
+        note: "Every answer is correct! Thank you, Trang, our HCM back office, for always taking care of everything in the office 💐"
+      }
+    },
+
+    // ---------- Câu riêng cho Linh Thư (QC tester) ----------
+    {
+      for: "Linh Thư",
+      q: "Khi thực hiện E2E testing với Cypress, thời gian chờ mặc định của `cy.get()` trước khi báo lỗi là bao lâu?",
+      correct: "4 giây",
+      wrong: "10 giây",
+      note: "Mặc định `defaultCommandTimeout` của Cypress là `4000` ms. Muốn chờ lâu hơn thì truyền `{ timeout: 10000 }` vào `cy.get()`.",
+      en: {
+        q: "In Cypress E2E testing, how long does `cy.get()` wait by default before failing?",
+        correct: "4 seconds",
+        wrong: "10 seconds",
+        note: "Cypress's default `defaultCommandTimeout` is `4000` ms. To wait longer, pass `{ timeout: 10000 }` to `cy.get()`."
+      }
     }
   ],
 
   punishments: [
     { text: "mua một ly trà sữa full topping",                                        rarity: "common", en: { text: "buy a bubble tea with all the toppings" } },
     { text: "viết thiệp tay chúc mừng",                                              rarity: "common", en: { text: "write a handmade greeting card" } },
-    { text: "tặng 1 cái bánh giò",                                                   rarity: "common", en: { text: "give a bánh giò (Vietnamese pyramid rice dumpling)" } },
-    { text: "tặng một bó hoa thật xinh",                                              rarity: "rare", en: { text: "give a lovely bouquet of flowers" } },
+    { text: "tặng 1 món quà nhỏ dễ thương (tự suy nghĩ)",                             rarity: "common", for: "chị Thu (Tea lady)", en: { text: "give a cute little gift (your own idea)" } },
+    { text: "tặng một bó hoa thật xinh",                                              rarity: "rare", for: "chị Trang (Tea lady)", en: { text: "give a lovely bouquet of flowers" } },
     { text: "mời một bữa trưa thật xịn",                                              rarity: "rare", en: { text: "buy a fancy lunch" } },
-    { text: "quay một video chúc mừng tập thể, đăng lên group F&B",                   rarity: "epic", en: { text: "film a group greeting video and post it in the F&B group" } }
+    { text: "quay một video chúc mừng tập thể, đăng lên group F&B",                   rarity: "epic", en: { text: "film a group greeting video and post it in the F&B group" } },
+    { text: "tặng 1 cái bánh giò",                                                   rarity: "common", en: { text: "give a bánh giò (Vietnamese pyramid rice dumpling)" } }
   ],
 
   men: [

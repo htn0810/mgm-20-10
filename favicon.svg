@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Logo: bông hoa 8 cánh giống hoa ở màn intro -->
+  <defs>
+    <linearGradient id="petal" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#e2577e"/>
+      <stop offset=".55" stop-color="#f58fac"/>
+      <stop offset="1" stop-color="#ffe0e9"/>
+    </linearGradient>
+    <radialGradient id="core" cx=".38" cy=".35" r=".7">
+      <stop offset="0" stop-color="#fff3c4"/>
+      <stop offset="1" stop-color="#e9b44c"/>
+    </radialGradient>
+  </defs>
+  <g fill="url(#petal)">
+    <ellipse cx="32" cy="16.5" rx="8.5" ry="14" transform="rotate(0 32 32)"/>
+    <ellipse cx="32" cy="16.5" rx="8.5" ry="14" transform="rotate(45 32 32)"/>
+    <ellipse cx="32" cy="16.5" rx="8.5" ry="14" transform="rotate(90 32 32)"/>
+    <ellipse cx="32" cy="16.5" rx="8.5" ry="14" transform="rotate(135 32 32)"/>
+    <ellipse cx="32" cy="16.5" rx="8.5" ry="14" transform="rotate(180 32 32)"/>
+    <ellipse cx="32" cy="16.5" rx="8.5" ry="14" transform="rotate(225 32 32)"/>
+    <ellipse cx="32" cy="16.5" rx="8.5" ry="14" transform="rotate(270 32 32)"/>
+    <ellipse cx="32" cy="16.5" rx="8.5" ry="14" transform="rotate(315 32 32)"/>
+  </g>
+  <circle cx="32" cy="32" r="9" fill="#fff"/>
+  <circle cx="32" cy="32" r="7.5" fill="url(#core)"/>
+</svg>

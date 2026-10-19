@@ -78,7 +78,14 @@
 
   /* ---------------- State ---------------- */
   // results[womanIndex] = { q, correct, p?, m? }
-  const freshState = () => ({ used: { q: [], p: [], m: [] }, results: {}, rescue: null, sound: true, lang: "vi" });
+  const freshState = () => ({ used: { q: [], p: [], m: [] }, results: {}, rescue: null, sound: true, lang: "vi", order: randomOrder(D.women.length) });
+
+  /** Hoán vị ngẫu nhiên 0..n-1 (thứ tự hiện các bạn nữ, cố định cho tới khi xoá lịch sử). */
+  function randomOrder(n) {
+    const a = Array.from({ length: n }, (_, i) => i);
+    for (let i = n - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+    return a;
+  }
   let state = load();
   let lang = state.lang && (window.I18N || {})[state.lang] ? state.lang : "vi";
 
@@ -91,6 +98,9 @@
   }
   /** Bỏ các chỉ số không còn tồn tại khi data.js bị sửa (bớt câu hỏi / thử thách / nam). */
   function sanitize(s) {
+    const n = D.women.length;
+    const o = s.order;
+    if (!Array.isArray(o) || o.length !== n || new Set(o).size !== n || o.some((i) => !(i >= 0 && i < n))) s.order = randomOrder(n);
     const size = { q: D.questions.length, p: D.punishments.length, m: D.men.length };
     Object.keys(size).forEach((k) => { s.used[k] = (s.used[k] || []).filter((i) => i < size[k]); });
     Object.keys(s.results).forEach((w) => {
@@ -137,18 +147,27 @@
   }
 
   /**
-   * Chọn thử thách:
-   *  - Rút ngẫu nhiên trong các thử thách CHƯA ra trước → không bỏ sót cái nào
-   *    (kể cả khi có bạn trả lời sai, mất lượt quay).
+   * Chọn thử thách cho bạn nữ `w`:
+   *  - Thử thách có `for` trùng tên bạn ấy → luôn ra cái đó (giữ riêng, người khác không trúng).
+   *  - Còn lại: rút ngẫu nhiên trong các thử thách CHƯA ra trước → không bỏ sót cái nào.
    *  - Ra đủ hết rồi thì chỉ thử thách Thường (common) được ra lại;
    *    Hiếm / Sử thi… chỉ ra đúng 1 lần.
    */
-  function pickPunishment() {
+  function pickPunishment(w) {
+    const name = D.women[w];
     const all = D.punishments.map((_, i) => i);
-    const unused = all.filter((i) => !state.used.p.includes(i));
-    if (unused.length) return unused[rand(unused.length)];
-    const commons = all.filter((i) => D.punishments[i].rarity === "common");
-    return (commons.length ? commons : all)[rand((commons.length ? commons : all).length)];
+    const unused = (i) => !state.used.p.includes(i);
+    const mine = all.filter((i) => D.punishments[i].for === name);
+    if (mine.length) {
+      const fresh = mine.filter(unused);
+      return (fresh.length ? fresh : mine)[rand((fresh.length ? fresh : mine).length)];
+    }
+    const open = all.filter((i) => !D.punishments[i].for);
+    const pool = open.length ? open : all;
+    const fresh = pool.filter(unused);
+    if (fresh.length) return fresh[rand(fresh.length)];
+    const commons = pool.filter((i) => D.punishments[i].rarity === "common");
+    return (commons.length ? commons : pool)[rand((commons.length ? commons : pool).length)];
   }
 
   /** Số bạn nam phải chịu phạt cho thử thách `p`. */
@@ -241,12 +260,13 @@
   function renderWomen() {
     const grid = $("#women-grid");
     grid.innerHTML = "";
-    D.women.forEach((name, i) => {
+    state.order.forEach((i, pos) => { // thứ tự ngẫu nhiên
+      const name = D.women[i];
       const r = state.results[i];
       const [c1, c2] = AVATAR_COLORS[i % AVATAR_COLORS.length];
       const btn = document.createElement("button");
       btn.className = "woman" + (r ? (r.p != null ? " done" : " missed") : "");
-      btn.style.animationDelay = i * 0.05 + "s";
+      btn.style.animationDelay = pos * 0.05 + "s";
       btn.innerHTML = `
         <span class="woman-avatar" style="--c1:${c1};--c2:${c2}">${esc(name.charAt(0).toUpperCase())}</span>
         <span class="woman-name">${esc(name)}</span>
@@ -374,16 +394,19 @@
 
     const box = $("#q-options");
     box.innerHTML = "";
-    const twoOptions = q.correct != null && q.wrong != null;
+    const allCorrect = Array.isArray(q.correct); // correct: [..] → mọi đáp án đều đúng, giữ nguyên thứ tự
+    const twoOptions = allCorrect || (q.correct != null && q.wrong != null);
     $("#act-reveal").hidden = twoOptions; // câu cũ chỉ có `a` → giữ cách "Xem đáp án"
     if (twoOptions) {
       // 2 đáp án, thứ tự A/B xáo ngẫu nhiên
-      const opts = shuffle([{ text: q.correct, ok: true }, { text: q.wrong, ok: false }]);
+      const opts = allCorrect
+        ? q.correct.map((text) => ({ text, ok: true }))
+        : shuffle([{ text: q.correct, ok: true }, { text: q.wrong, ok: false }]);
       opts.forEach((o, i) => {
         const b = document.createElement("button");
         b.className = "q-opt";
         b.dataset.ok = o.ok ? "1" : "";
-        b.innerHTML = `<span class="letter">${"AB"[i]}</span><span>${richText(o.text)}</span>`;
+        b.innerHTML = `<span class="letter">${"ABCD"[i]}</span><span>${richText(o.text)}</span>`;
         b.addEventListener("click", () => chooseAnswer(b));
         box.appendChild(b);
       });
@@ -409,8 +432,10 @@
     btn.classList.remove("picked");
 
     const ok = btn.dataset.ok === "1";
+    const allOk = opts.every((b) => b.dataset.ok === "1"); // câu "đáp án nào cũng đúng": chỉ sáng ô được chọn
     opts.forEach((b) => {
-      if (b.dataset.ok === "1") b.classList.add("is-correct");
+      if (allOk) b.classList.add(b === btn ? "is-correct" : "dim");
+      else if (b.dataset.ok === "1") b.classList.add("is-correct");
       else if (b === btn) b.classList.add("is-wrong");
       else b.classList.add("dim");
     });
@@ -453,7 +478,7 @@
 
   /* ---------------- Gacha ---------------- */
   function setupGacha() {
-    current.p = pickPunishment();
+    current.p = pickPunishment(current.w);
     current.ms = pickMen(victimsOf(current.p));
     $("#g-woman").textContent = D.women[current.w];
     $("#btn-spin").disabled = false;
@@ -480,6 +505,35 @@
     return -(idx * W + W / 2 - view / 2);
   }
 
+  /**
+   * Dãy item cho cuộn quay, không để 1 tên lặp lại trong khoảng `gap` ô liền nhau
+   * (≈ số ô nhìn thấy trong khung). `fixed` = { vị trí: item } bắt buộc (VD ô trúng).
+   */
+  function reelSeq(pool, len, fixed) {
+    const gap = Math.min(pool.length - 1, 8);
+    const fixedAt = Object.entries(fixed).map(([p, x]) => [Number(p), x]);
+    if (pool.length <= 9 && fixedAt.length <= 1) {
+      // Ít item (VD 7 thử thách): xoay vòng 1 hoán vị ngẫu nhiên, canh để ô bắt buộc rơi đúng chỗ
+      const perm = shuffle(pool);
+      const [fp, fx] = fixedAt[0] || [0, perm[0]];
+      const shift = perm.indexOf(fx) - fp;
+      return Array.from({ length: len }, (_, p) => perm[(((p + shift) % perm.length) + perm.length) % perm.length]);
+    }
+    const seq = [];
+    let bag = [];
+    for (let p = 0; p < len; p++) {
+      if (fixed[p] != null) { seq.push(fixed[p]); continue; }
+      const ok = (x) => !seq.slice(-gap).includes(x) &&
+        !fixedAt.some(([fp, fx]) => fx === x && Math.abs(fp - p) <= gap);
+      if (!bag.some(ok)) bag = shuffle(pool);
+      const k = bag.findIndex(ok);
+      if (k >= 0) { seq.push(bag.splice(k, 1)[0]); continue; }
+      const alt = pool.filter(ok);
+      seq.push(alt.length ? alt[rand(alt.length)] : pool[rand(pool.length)]);
+    }
+    return seq;
+  }
+
   function resetMachine(kind) {
     const strip = $("#reel-" + kind);
     const machine = $("#machine-" + kind);
@@ -489,7 +543,7 @@
     $("#foot-" + kind).textContent = t("g.waiting");
     // Hiển thị vài item ngẫu nhiên trong lúc chờ, item giữa nằm trong khung
     const pool = POOLS[kind].map((_, i) => i);
-    strip.innerHTML = Array.from({ length: 9 }, () => itemHTML(kind, pool[rand(pool.length)])).join("");
+    strip.innerHTML = reelSeq(pool, 9, {}).map((i) => itemHTML(kind, i)).join("");
     strip.style.transform = `translateX(${centerX(strip, 4)}px)`;
   }
 
@@ -518,11 +572,9 @@
     const strip = $("#reel-" + kind);
     const pool = POOLS[kind].map((_, i) => i);
     const FILL = 70;
-    const seq = [];
-    for (let i = 0; i < FILL; i++) seq.push(pool[rand(pool.length)]);
-    seq.push(target);
-    for (let i = 0; i < 4; i++) seq.push(pool[rand(pool.length)]);
-    if (startItem != null) seq[2] = startItem; // bắt đầu từ người vừa trúng → chuyển cảnh liền mạch
+    const fixed = { [FILL]: target };
+    if (startItem != null) fixed[2] = startItem; // bắt đầu từ người vừa trúng → chuyển cảnh liền mạch
+    const seq = reelSeq(pool, FILL + 5, fixed);
 
     strip.innerHTML = seq.map((i) => itemHTML(kind, i)).join("");
     const W = strip.firstElementChild.offsetWidth;
@@ -1352,7 +1404,7 @@
     ctx.textAlign = "right";
     ctx.fillStyle = "#8f7a85";
     ctx.font = `600 22px ${FONT}`;
-    ctx.fillText("🌸 Gacha 20/10", W - PAD, H - 38);
+    ctx.fillText("🌸 mgm HCM 20/10", W - PAD, H - 38);
     ctx.textAlign = "left";
 
     return cv;
@@ -1494,7 +1546,11 @@
   }
 
   /* ---------------- Init ---------------- */
-  $("#company-name").textContent = D.companyName || "";
+  // Cảnh báo khi `for` trong data.js không khớp tên bạn nữ nào (VD sau khi đổi tên)
+  [...D.questions, ...D.punishments].forEach((x) => {
+    if (x.for && !D.women.includes(x.for)) console.warn(`[data.js] for: "${x.for}" không khớp tên bạn nữ nào trong women`, x);
+  });
+  save(); // lưu thứ tự người chơi vừa tạo (nếu lịch sử cũ chưa có)
   applyStaticI18n();
   spawnPetals();
   bind();
