@@ -986,7 +986,6 @@
     let ms = survivors();
     if (test && !ms.length) ms = D.men.map((_, i) => i);
     rescueRun = { ms, qi: rand(R.questions.length), test };
-    $("#rs-test").hidden = !test;
     $("#rs-team").innerHTML = rescueRun.ms
       .map((m, i) => `<span class="victim-chip" style="--d:${i * 0.06}s"><span class="sob">😰</span>${esc(D.men[m])}</span>`)
       .join("");
@@ -998,6 +997,70 @@
 
   function stopRescueTimer() {
     quizLive = false;
+    stopFrameTimer();
+  }
+
+  /* Đồng hồ đếm ngược 2 phút chạy quanh viền hộp thoại câu đố (MC bấm để bắt đầu) */
+  const FRAME_TIMER_MS = 2 * 60 * 1000;
+  let frameTimerSeq = 0;
+  let frameTimerRun = 0; // id lượt chạy hiện tại, 0 = đang tắt
+
+  /** Đường viền bo góc bắt đầu từ giữa cạnh trên, chạy theo chiều kim đồng hồ. */
+  function frameTimerPath(w, h, r, i) {
+    const x0 = i, y0 = i, x1 = w - i, y1 = h - i;
+    r = Math.min(r, (x1 - x0) / 2, (y1 - y0) / 2);
+    return `M ${w / 2} ${y0} H ${x1 - r} A ${r} ${r} 0 0 1 ${x1} ${y0 + r} V ${y1 - r} ` +
+      `A ${r} ${r} 0 0 1 ${x1 - r} ${y1} H ${x0 + r} A ${r} ${r} 0 0 1 ${x0} ${y1 - r} ` +
+      `V ${y0 + r} A ${r} ${r} 0 0 1 ${x0 + r} ${y0} Z`;
+  }
+
+  function startFrameTimer() {
+    stopFrameTimer();
+    const run = frameTimerRun = ++frameTimerSeq;
+    const el = $("#frame-timer");
+    const svg = el.querySelector("svg");
+    const bar = el.querySelector(".ft-bar");
+    const label = $("#ft-label");
+    el.hidden = false;
+    el.classList.remove("hurry");
+    $("#rs-timer-start").hidden = true;
+    tone(660, 0.12, "sine", 0.08);
+    const t0 = performance.now();
+    let lastSec = null;
+    const step = (now) => {
+      if (run !== frameTimerRun) return; // đã bị dừng / chạy lại
+      // Bám theo vị trí, kích thước thật của hộp thoại
+      const box = $(".modal-box").getBoundingClientRect();
+      const radius = parseFloat(getComputedStyle($(".modal-box")).borderTopLeftRadius) || 28;
+      Object.assign(el.style, { left: box.left + "px", top: box.top + "px", width: box.width + "px", height: box.height + "px" });
+      svg.setAttribute("viewBox", `0 0 ${box.width} ${box.height}`);
+      const d = frameTimerPath(box.width, box.height, radius, 3);
+      svg.querySelectorAll("path").forEach((p) => p.setAttribute("d", d));
+
+      const left = Math.max(0, FRAME_TIMER_MS - (now - t0));
+      bar.style.strokeDashoffset = 100 * (1 - left / FRAME_TIMER_MS);
+      const sec = Math.ceil(left / 1000);
+      if (sec !== lastSec) {
+        label.textContent = `⏱ ${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
+        el.classList.toggle("hurry", sec <= 10);
+        if (sec <= 5 && sec > 0) tone(880, 0.08, "square", 0.05);
+        lastSec = sec;
+      }
+      if (left <= 0) { // hết 2 phút → tắt đồng hồ
+        tone(523, 0.3, "sine", 0.1);
+        setTimeout(() => tone(392, 0.4, "sine", 0.1), 200);
+        if (quizLive) $("#rs-note").textContent = t("rs.timeout");
+        stopFrameTimer();
+        return;
+      }
+      nextFrame(step);
+    };
+    nextFrame(step);
+  }
+
+  function stopFrameTimer() {
+    frameTimerRun = 0;
+    $("#frame-timer").hidden = true;
   }
 
   function startQuiz() {
@@ -1009,6 +1072,7 @@
     $("#rs-after").hidden = true;
     $("#rs-judge").hidden = true;
     $("#rs-think").hidden = !open;
+    $("#rs-timer-start").hidden = false;
     $("#rs-reveal").hidden = true;
     $("#rs-stamp").classList.remove("show");
     const box = $("#rs-options");
@@ -1518,6 +1582,7 @@
     $("#rs-start").addEventListener("click", startQuiz);
     $("#rs-accept").addEventListener("click", showPushups);
     $("#rs-show").addEventListener("click", () => revealPuzzle(false));
+    $("#rs-timer-start").addEventListener("click", startFrameTimer);
     $("#rs-passed").addEventListener("click", () => judgePuzzle(true));
     $("#rs-failed").addEventListener("click", () => judgePuzzle(false));
 

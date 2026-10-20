@@ -204,7 +204,6 @@
       <div class="panel" id="panel-rescue" hidden>
         <!-- Bước 1: giới thiệu -->
         <div class="rs-step" id="rs-intro">
-          <p class="rs-test" id="rs-test" data-i18n="rs.test" hidden>Chế độ test · không lưu kết quả</p>
           <div class="rs-siren" aria-hidden="true">🆘</div>
           <h3 class="rs-title" data-i18n="rs.title">VÒNG GIẢI CỨU</h3>
           <p class="rs-lead" data-i18n-html="rs.lead">
@@ -231,6 +230,7 @@
           </div>
           <p class="rs-note" id="rs-note"></p>
           <div class="actions" id="rs-think" hidden>
+            <button class="btn btn-primary btn-lg" id="rs-timer-start" data-i18n="rs.timerStart">⏱ Bắt đầu 2 phút</button>
             <button class="btn btn-ghost btn-lg" id="rs-show" data-i18n="rs.show">Xem đáp án 👀</button>
           </div>
           <div class="actions" id="rs-judge" hidden>
@@ -298,6 +298,12 @@
         <p class="preview-sub" id="pv-sub"></p>
         <div class="preview-grid" id="pv-grid"></div>
       </div>
+    </div>
+
+    <!-- Đồng hồ 2 phút chạy quanh viền hộp thoại (câu đố giải cứu) -->
+    <div class="frame-timer" id="frame-timer" hidden aria-hidden="true">
+      <svg><path class="ft-track"/><path class="ft-bar" pathLength="100"/></svg>
+      <span class="ft-label" id="ft-label">2:00</span>
     </div>
 
     <!-- Hiệu ứng BONUS GACHA -->

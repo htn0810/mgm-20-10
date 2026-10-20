@@ -97,7 +97,6 @@ window.I18N = {
     "pv.sub": "{total} thử thách · {used} đã có chủ · {left} đang chờ người “may mắn” 😏",
 
     "rs.title": "VÒNG GIẢI CỨU",
-    "rs.test": "Chế độ test · không lưu kết quả",
     "rs.lead": "Các anh dưới đây chưa bị gọi tên lần nào. Cơ hội cuối: giải đúng <b>1 câu đố</b> thì cả đội được giải cứu. Sai thì <b>cả đội hít đất</b> 💪",
     "rs.start": "Vào câu đố 🎯",
     "rs.eyebrow": "Câu đố giải cứu",
@@ -108,6 +107,7 @@ window.I18N = {
     "rs.finish": "Hít xong rồi 💪",
     "rs.checking": "Đang kiểm tra đáp án…",
     "rs.show": "Xem đáp án 👀",
+    "rs.timerStart": "⏱ Bắt đầu 2 phút",
     "rs.failed": "Trả lời sai 💪",
     "rs.passed": "Trả lời đúng 🎉",
     "rs.judge": "Các anh trả lời có đúng không?",
@@ -248,7 +248,6 @@ window.I18N = {
     "pv.sub": "{total} challenges · {used} taken · {left} waiting for a “lucky” guy 😏",
 
     "rs.title": "RESCUE ROUND",
-    "rs.test": "Test mode · results are not saved",
     "rs.lead": "These guys haven't been picked yet. Last chance: solve <b>1 puzzle</b> correctly and the whole team is saved. Get it wrong and <b>everyone does push-ups</b> 💪",
     "rs.start": "Show the puzzle 🎯",
     "rs.eyebrow": "Rescue puzzle",
@@ -259,6 +258,7 @@ window.I18N = {
     "rs.finish": "Push-ups done 💪",
     "rs.checking": "Checking the answer…",
     "rs.show": "Show the answer 👀",
+    "rs.timerStart": "⏱ Start 2-minute timer",
     "rs.failed": "Wrong answer 💪",
     "rs.passed": "Correct answer 🎉",
     "rs.judge": "Did the guys get it right?",

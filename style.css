@@ -1607,16 +1607,33 @@ kbd {
 .rs-ok-btn { background: #4fae7c; box-shadow: 0 10px 22px -10px rgba(45, 122, 82, .6); }
 .rs-ok-btn:hover { background: #3f9a6b; }
 
-/* Nhãn chế độ test của vòng giải cứu (mở bằng double-click bông hoa trên header) */
-.rs-test {
-  display: inline-block;
-  margin: 0 0 8px;
-  padding: 3px 12px;
-  border-radius: 999px;
-  background: #fff6e0;
-  box-shadow: inset 0 0 0 1px #f3d27a;
-  color: #9a6b12;
-  font-size: .78rem; font-weight: 700;
-}
-.rs-test[hidden] { display: none; }
 .brand-flower { user-select: none; -webkit-user-select: none; }
+
+/* Đồng hồ 2 phút chạy quanh viền hộp thoại câu đố giải cứu */
+.frame-timer {
+  position: fixed; z-index: 30;
+  pointer-events: none;
+}
+.frame-timer svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.frame-timer path { fill: none; stroke-width: 6; stroke-linecap: round; }
+.frame-timer .ft-track { stroke: color-mix(in srgb, var(--rose) 14%, transparent); }
+.frame-timer .ft-bar {
+  stroke: var(--rose);
+  stroke-dasharray: 100;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--rose) 55%, transparent));
+  transition: stroke .3s;
+}
+.ft-label {
+  position: absolute; top: 0; left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--rose);
+  color: #fff;
+  font: 700 clamp(1rem, 1.8vw, 1.3rem)/1.2 "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  box-shadow: 0 8px 20px -8px color-mix(in srgb, var(--rose) 70%, transparent);
+  white-space: nowrap;
+}
+.frame-timer.hurry .ft-bar { stroke: var(--danger); }
+.frame-timer.hurry .ft-label { background: var(--danger); animation: ftPulse .5s ease-in-out infinite alternate; }
+@keyframes ftPulse { to { transform: translate(-50%, -50%) scale(1.1); } }
