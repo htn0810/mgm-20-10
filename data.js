@@ -178,11 +178,11 @@ window.GAME_DATA = {
   punishments: [
     { text: "mua một ly trà sữa full topping",                                        rarity: "common", repeat: true, en: { text: "buy a bubble tea with all the toppings" } },
     { text: "viết thiệp tay chúc mừng",                                              rarity: "common", en: { text: "write a handmade greeting card" } },
-    { text: "tặng 1 món quà nhỏ dễ thương (tự suy nghĩ)",                             rarity: "common", for: "chị Thu (Tea lady)", en: { text: "give a cute little gift (your own idea)" } },
-    { text: "tặng một bó hoa thật xinh",                                              rarity: "rare", for: "chị Trang (Tea lady)", en: { text: "give a lovely bouquet of flowers" } },
+    { text: "tặng 1 món quà nhỏ dễ thương (tự suy nghĩ)",                             rarity: "common", en: { text: "give a cute little gift (your own idea)" } },
+    { text: "tặng một bó hoa thật xinh",                                              rarity: "rare", en: { text: "give a lovely bouquet of flowers" } },
     { text: "mời một bữa trưa thật xịn",                                              rarity: "rare", en: { text: "buy a fancy lunch" } },
     { text: "quay một video chúc mừng tập thể, đăng lên group F&B",                   rarity: "epic", en: { text: "film a group greeting video and post it in the F&B group" } },
-    { text: "tặng 1 cái bánh giò",                                                   rarity: "common", men: ["Trình"], en: { text: "give a bánh giò (Vietnamese pyramid rice dumpling)" } }
+    { text: "tặng 1 cái bánh giò",                                                   rarity: "common", en: { text: "give a bánh giò (Vietnamese pyramid rice dumpling)" } }
   ],
 
   men: [
